@@ -1,0 +1,181 @@
+import React, { useState } from 'react'; // Fixed missing React and useState import
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  TextInput, 
+  TouchableOpacity, 
+  Alert, 
+  useColorScheme 
+} from 'react-native';
+
+const App = () => {
+  // 1. Theme Configuration (Fixed string check for lowercase 'dark')
+  const theme = useColorScheme();
+  const isDarkMode = theme === 'dark'; 
+  const backgroundColor = isDarkMode ? '#000000' : '#FFFFFF';
+  const textColor = isDarkMode ? '#FFFFFF' : '#000000';
+
+  // 2. State Management (Added missing loggingin state)
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [displayUser, setDisplayUser] = useState('');
+  const [loggingin, setLoggingin] = useState(true); 
+
+  // 3. Logic Action Handlers
+  const handleLogin = () => {
+    if (!username || !password) {
+      Alert.alert('Error', 'Please fill out Both Fields');
+      return;
+    }
+    setDisplayUser(username);
+    Alert.alert('Welcome!', `Dear ${username}!`);
+  };
+
+  const handleRegister = () => {
+    if (!name || !password || !username) {
+      Alert.alert('Error', 'Fill all of the Fields');
+      return;
+    }
+    setDisplayUser(username);
+    Alert.alert('Success', 'Account created successfully!');
+    setLoggingin(true); // Switches view back to the Login panel
+  };
+
+  // 4. UI Layout Rendering (Wrapped sibling views and completed ternary branch)
+  return (
+    <View style={[styles.container, { backgroundColor }]}>
+      {loggingin ? (
+        // --- LOGIN MODE PANEL ---
+        <View style={styles.formContainer}>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: textColor }]}>Welcome!</Text>
+            <Text style={{ color: textColor }}>You have to Login Here</Text>
+          </View>
+          
+          <View style={styles.body}>
+            <Text style={{ color: textColor }}>Enter your credentials</Text>
+            <TextInput
+              style={[styles.input, { color: textColor, borderColor: textColor }]}
+              placeholder="Enter your Name & Email"
+              placeholderTextColor="#888"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <TextInput
+              style={[styles.input, { color: textColor, borderColor: textColor }]}
+              placeholder="Password"
+              secureTextEntry
+              placeholderTextColor="#888"
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+            
+            {displayUser ? (
+              <Text style={[styles.infoText, { color: textColor }]}>login as : {displayUser}</Text>
+            ) : null}
+            
+            <TouchableOpacity onPress={() => setLoggingin(false)}>
+              <Text style={styles.toggleText}>Don't have an account? Register</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        // --- REGISTER MODE PANEL ---
+        <View style={styles.formContainer}>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: textColor }]}>Register</Text>
+            <Text style={{ color: textColor }}>Create your account details</Text>
+          </View>
+          
+          <View style={styles.body}>
+            <TextInput
+              style={[styles.input, { color: textColor, borderColor: textColor }]}
+              placeholder="Full Name"
+              placeholderTextColor="#888"
+              value={name}
+              onChangeText={setName}
+            />
+            <TextInput
+              style={[styles.input, { color: textColor, borderColor: textColor }]}
+              placeholder="Username"
+              placeholderTextColor="#888"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <TextInput
+              style={[styles.input, { color: textColor, borderColor: textColor }]}
+              placeholder="Password"
+              secureTextEntry
+              placeholderTextColor="#888"
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+              <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => setLoggingin(true)}>
+              <Text style={styles.toggleText}>Already have an account? Login</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+};
+
+export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  formContainer: {
+    width: '100%',
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
+  body: {
+    width: '100%',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  infoText: {
+    marginTop: 15,
+    textAlign: 'center',
+  },
+  toggleText: {
+    color: '#007AFF',
+    marginTop: 20,
+    textAlign: 'center',
+  },
+});
